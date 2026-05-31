@@ -16,8 +16,7 @@ class QuizBrain:
         self.current_question = self.question_list[self.question_number] # Assigns the current question to the next question in the list
         self.question_number += 1 # Increments the question number
         q_text = html.unescape(self.current_question.text) # Unescapes the question text
-        user_answer = input(f"Q.{self.question_number}: {q_text} (True/False): ") # Asks the user the question and stores the answer
-        self.check_answer(user_answer) # Checks the user's answer
+        return f"Q.{self.question_number}: {q_text}"
     def check_answer(self, user_answer):
         """Checks if the user's answer is correct."""
         correct_answer = self.current_question.answer # Gets the correct answer from the current question
