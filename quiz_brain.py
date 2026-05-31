@@ -1,3 +1,5 @@
+import html
+
 class QuizBrain:
 
     def __init__(self, q_list):
@@ -13,7 +15,8 @@ class QuizBrain:
         """Advances the quiz to the next question."""
         self.current_question = self.question_list[self.question_number] # Assigns the current question to the next question in the list
         self.question_number += 1 # Increments the question number
-        user_answer = input(f"Q.{self.question_number}: {self.current_question.text} (True/False): ") # Asks the user the question and stores the answer
+        q_text = html.unescape(self.current_question.text) # Unescapes the question text
+        user_answer = input(f"Q.{self.question_number}: {q_text} (True/False): ") # Asks the user the question and stores the answer
         self.check_answer(user_answer) # Checks the user's answer
     def check_answer(self, user_answer):
         """Checks if the user's answer is correct."""
