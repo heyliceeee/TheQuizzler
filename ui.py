@@ -12,8 +12,8 @@ class QuizUI:
         self.score_label = None  # create a label
         self.canvas = None # create a canvas
         self.question_text = None # create a canvas
-        self.right_btn = None
-        self.wrong_btn = None
+        self.right_btn = None # create a button
+        self.wrong_btn = None # create a button
         self.create_window() # create the window
         self.create_labels() # create the labels
         self.create_canvas() # create the canvas
@@ -21,12 +21,42 @@ class QuizUI:
         self.get_next_question() # get the next question
         self.window.mainloop() # continuously run the program
 
+    def true_pressed(self):
+        """
+        when the user presses the true button, check if the answer is correct
+        """
+        is_right = self.quiz.check_answer("True") # check if the user's answer is correct, if it is, increase the score by 1
+        self.give_feedback(is_right) # give feedback to the user
+    def false_pressed(self):
+        """
+        when the user presses the true button, check if the answer is false
+        """
+        is_right = self.quiz.check_answer("False")  # check if the user's answer is correct, if it is, increase the score by 1
+        self.give_feedback(is_right)  # give feedback to the user
+    def give_feedback(self, is_right):
+        """
+        change the background color of the window and get the next question after 1 second
+        :param is_right: is the answer correct?
+        """
+        if is_right: # if the answer is correct
+            self.canvas.config(bg="green") # change the background color of the canvas to green
+        else: # if the answer is wrong
+            self.canvas.config(bg="red") # change the background color of the canvas to red
+        self.window.after(1000, self.get_next_question) # get the next question after 1 second
     def get_next_question(self):
         """
         get the next question from the quiz_brain object and display it on the canvas
         """
-        q_text = self.quiz.next_question() # get the next question
-        self.canvas.itemconfig(self.question_text, text=q_text) # set the text of the question
+        self.canvas.config(bg="white") # change the background color of the canvas to white
+        if self.quiz.still_has_questions(): # if there are still questions left
+            self.score_label.config(text=f"Score: {self.quiz.score}") # set the score label to the current score
+            q_text = self.quiz.next_question() # get the next question
+            self.canvas.itemconfig(self.question_text, text=q_text) # set the text of the question
+            
+        else: # if there are no more questions
+            self.canvas.itemconfig(self.question_text, text="You've completed the quiz!") # display a message
+            self.right_btn(state="disabled") # disable the true button
+            self.wrong_btn(state="disabled") # disable the false button
     def create_window(self):
         """
         create a window, set a title, and set the padding
@@ -52,12 +82,12 @@ class QuizUI:
         """
         create the buttons, set the text, and place them on the window
         """
-        right_img = PhotoImage(file=f"{dir_path}/images/true.png")
-        self.right_btn = Button(image=right_img, bg=THEME_COLOR, highlightthickness=0)  # create the button
-        self.right_btn.image = right_img
+        right_img = PhotoImage(file=f"{dir_path}/images/true.png") # get the path of the image
+        self.right_btn = Button(command=self.true_pressed, image=right_img, bg=THEME_COLOR, highlightthickness=0)  # create the button
+        self.right_btn.image = right_img # set the image of the button
         self.right_btn.grid(column=0, row=2)  # place the button on the window
 
-        wrong_img = PhotoImage(file=f"{dir_path}/images/false.png")
-        self.wrong_btn = Button(image=wrong_img, bg=THEME_COLOR, highlightthickness=0) # create the button
-        self.wrong_btn.image = wrong_img
+        wrong_img = PhotoImage(file=f"{dir_path}/images/false.png") # get the path of the image
+        self.wrong_btn = Button(command=self.false_pressed, image=wrong_img, bg=THEME_COLOR, highlightthickness=0) # create the button
+        self.wrong_btn.image = wrong_img # set the image of the button
         self.wrong_btn.grid(column=1, row=2) # place the button on the window

@@ -20,11 +20,8 @@ class QuizBrain:
     def check_answer(self, user_answer):
         """Checks if the user's answer is correct."""
         correct_answer = self.current_question.answer # Gets the correct answer from the current question
-        if user_answer.lower() == correct_answer.lower(): # Checks if the user's answer is the same as the correct answer
+        if user_answer == correct_answer: # Checks if the user's answer is the same as the correct answer
             self.score += 1 # If it is, increments the score
-            print("You got it right!")
+            return True
         else:
-            print("That's wrong.")
-
-        print(f"Your current score is: {self.score}/{self.question_number}")
-        print("\n")
+            return False
